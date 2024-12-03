@@ -2,9 +2,7 @@ let firstCard = null;
 let secondCard = null;
 let isClickPrevented = null;
 let numberOfTries = 0;
-const ON = "ON";
-const OFF = "OFF";
-const TOGGLE = "TOGGLE";
+let showCheat = true;
 
 /**
  * Enables or disables cheat mode for the memory game.
@@ -16,7 +14,6 @@ const TOGGLE = "TOGGLE";
 function enableCheatMode(enable) {
   if (!enable) {
     console.log("cheat mode disabled");
-    showColorCheat(OFF);
     document.removeEventListener("keydown", keyDownEventHandler);
     return;
   }
@@ -27,24 +24,23 @@ function enableCheatMode(enable) {
 function keyDownEventHandler(event) {
   // console.log(event.code);
   if (event.code === "Backquote") {
-    showColorCheat(TOGGLE);
+    showColorCheat();
   }
 }
 
-function showColorCheat(mode) {
-  if (!mode) mode = TOGGLE;
+function showColorCheat() {
   let cards = document.querySelectorAll(".card");
   for (let card of cards) {
-    if (mode === ON) card.innerHTML = card.dataset.color;
-    if (mode === OFF) card.innerHTML = "";
-    if (mode === TOGGLE) {
-      if (card.innerHTML === "") {
-        card.innerHTML = card.dataset.color;
-      } else {
-        card.innerHTML = "";
-      }
+    if (card.dataset.matched === "true" || card.dataset.shown === "true") {
+      continue;
+    }
+    if (showCheat) {
+      card.innerHTML = card.dataset.color;
+    } else {
+      card.innerHTML = "";
     }
   }
+  showCheat = !showCheat;
 }
 
 function getRandomNumber(max) {
@@ -70,7 +66,6 @@ function resetGame() {
     card.dataset.color = color;
     console.log(color);
     card.dataset.matched = "false";
-    // card.style.backgroundColor = "white";
     card.innerHTML = "";
     card.addEventListener("click", onCardClicked);
     numberOfTries = 0;
@@ -133,6 +128,7 @@ function onCardClicked() {
  */
 function showCard(card) {
   card.innerHTML = `<img src="Assets/${card.dataset.color}.png">`;
+  card.dataset.shown = "true";
 }
 
 /**
@@ -150,7 +146,9 @@ function markCardsAsMatched(card1, card2) {
  */
 function resetCards() {
   firstCard.innerHTML = "";
+  firstCard.dataset.shown = "false";
   secondCard.innerHTML = "";
+  secondCard.dataset.shown = "false";
   nextTurn();
 }
 
