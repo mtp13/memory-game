@@ -1,22 +1,18 @@
 let firstCard = null;
 let secondCard = null;
-let preventClick = null;
+let isClickPrevented = null;
 let numberOfTries = 0;
 const ON = "ON";
 const OFF = "OFF";
 const TOGGLE = "TOGGLE";
 
-// let pictures = {
-//   elyse: "elyse.png",
-//   cole: "cole.png",
-//   walker: "walker.png",
-//   roman: "roman.png",
-//   millie: "millie.png",
-//   virginia: "virginia.png",
-//   pops: "pops.png",
-//   gigi: "gigi.png",
-// };
-
+/**
+ * Enables or disables cheat mode for the memory game.
+ * When cheat mode is enabled, it listens for keydown events to trigger cheat functionalities.
+ * When cheat mode is disabled, it stops listening for keydown events and hides cheat information.
+ *
+ * @param {boolean} enable - A boolean value indicating whether to enable (true) or disable (false) cheat mode.
+ */
 function enableCheatMode(enable) {
   if (!enable) {
     console.log("cheat mode disabled");
@@ -97,38 +93,67 @@ function resetShownCards() {
   secondCard = null;
   document.getElementById("status").innerHTML =
     "Click two squares to play. Tries: " + numberOfTries;
-  preventClick = null;
+  isClickPrevented = null;
 }
 
+/**
+ * Handles the logic for when a card is clicked in the memory game.
+ */
 function onCardClicked() {
-  if (this === firstCard || preventClick || this.dataset.matched === "true") {
+  if (
+    this === firstCard ||
+    isClickPrevented ||
+    this.dataset.matched === "true"
+  ) {
     return;
   }
-  preventClick = true;
+  isClickPrevented = true;
   if (!firstCard) {
     firstCard = this;
-    firstCard.innerHTML =
-      "<img src=Assets/" + firstCard.dataset.color + ".png" + ">";
-    preventClick = null;
+    showCard(firstCard);
+    isClickPrevented = null;
   } else {
     secondCard = this;
-    secondCard.innerHTML =
-      "<img src=Assets/" + secondCard.dataset.color + ".png" + ">";
+    showCard(secondCard);
     if (secondCard.dataset.color === firstCard.dataset.color) {
-      firstCard.dataset.matched = secondCard.dataset.matched = "true";
+      markCardsAsMatched(firstCard, secondCard);
       document.getElementById("status").innerHTML = "Match Found";
       setTimeout(nextTurn, 1000);
     } else {
       document.getElementById("status").innerHTML = "Match Not Found";
-      setTimeout(function () {
-        firstCard.innerHTML = "";
-        secondCard.innerHTML = "";
-        nextTurn();
-      }, 1000);
+      setTimeout(resetCards, 1000);
     }
   }
 }
 
+/**
+ * Displays the image for the given card.
+ *
+ * @param {HTMLElement} card - The card element to show.
+ */
+function showCard(card) {
+  card.innerHTML = `<img src="Assets/${card.dataset.color}.png">`;
+}
+
+/**
+ * Marks the given cards as matched.
+ *
+ * @param {HTMLElement} card1 - The first card element.
+ * @param {HTMLElement} card2 - The second card element.
+ */
+function markCardsAsMatched(card1, card2) {
+  card1.dataset.matched = card2.dataset.matched = "true";
+}
+
+/**
+ * Resets the displayed cards after a mismatch.
+ */
+function resetCards() {
+  firstCard.innerHTML = "";
+  secondCard.innerHTML = "";
+  nextTurn();
+}
+
 resetGame();
 
-enableCheatMode(false);
+enableCheatMode(true);
