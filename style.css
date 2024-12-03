@@ -7,15 +7,10 @@
 }
 
 body {
-  background-color: white;
+  background-color: lightblue;
   text-align: center;
   color: black;
   padding: 50px;
-  /* 
-    background-image: url("family.png");
-    background-size: cover;
-    background-repeat: no-repeat; 
-    */
 }
 
 #new-game {
@@ -31,34 +26,36 @@ body {
 }
 
 .row {
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .card {
-  display: inline-block;
   background-color: white;
   height: 120px;
-  width: 90px;
+  width: 100px;
   border: 2px solid black;
   border-radius: 5px;
   box-shadow: 3px 3px;
   margin: 10px;
-  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card img {
-  height: 100px;
-  width: 75px;
-  margin-top: 10px;
+  width: 80px;
   border: 1px solid black;
 }
 
 .card:hover {
-  border-color: red;
+  /*change the background color of the card when hovering*/
+  background-color: lightblue;
   cursor: pointer;
 }
 
-/* highlight button when hovering */
+/* change the background color of the button when hovering */
 #new-game:hover {
   background-color: lightblue;
   cursor: pointer;

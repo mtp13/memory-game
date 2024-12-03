@@ -70,7 +70,7 @@ function resetGame() {
     card.dataset.color = color;
     console.log(color);
     card.dataset.matched = "false";
-    card.style.backgroundColor = "white";
+    // card.style.backgroundColor = "white";
     card.innerHTML = "";
     card.addEventListener("click", onCardClicked);
     numberOfTries = 0;
