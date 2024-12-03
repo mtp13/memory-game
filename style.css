@@ -52,15 +52,11 @@ body {
 .card:hover {
   transition: transform 0.2s;
   transform: scale(1.1);
-  /*change the background color of the card when hovering*/
-  /* background-color: lightblue; */
   cursor: pointer;
 }
 
-/* change the background color of the button when hovering */
 #new-game:hover {
   transition: transform 0.2s;
   transform: scale(1.1);
-  /* background-color: lightblue; */
   cursor: pointer;
 }
