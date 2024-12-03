@@ -68,9 +68,9 @@ function resetGame() {
     card.dataset.matched = "false";
     card.innerHTML = "";
     card.addEventListener("click", onCardClicked);
-    numberOfTries = 0;
-    resetShownCards();
   }
+  numberOfTries = 0;
+  resetShownCards();
 }
 
 function nextTurn() {
