@@ -42,14 +42,14 @@ function getRandomNumber(max) {
 
 function resetGame() {
   const uniqueColors = [
-    "pops",
-    "gigi",
-    "cole",
-    "walker",
-    "roman",
-    "millie",
-    "virginia",
-    "elyse",
+    "pops2",
+    "gigi2",
+    "cole2",
+    "walker2",
+    "roman2",
+    "millie2",
+    "virginia2",
+    "elyse2",
   ];
   const cardColors = [...uniqueColors, ...uniqueColors];
   const $cards = document.querySelectorAll(".card");
