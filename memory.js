@@ -27,8 +27,9 @@ function showColorCheat() {
       continue;
     }
     if (showCheat) {
-      card.innerHTML = card.dataset.color;
-      card.style.color = "white";
+      card.innerHTML = card.dataset.color.toUpperCase();
+      card.style.color = "#023047";
+      card.style.fontWeight = "bold";
     } else {
       card.innerHTML = "";
     }
@@ -79,7 +80,7 @@ function resetShownCards() {
   firstCard = null;
   secondCard = null;
   document.getElementById("status").innerHTML =
-    "Click two squares to play. Tries: " + numberOfTries;
+    "Number of Tries: " + numberOfTries;
   isClickPrevented = null;
 }
 
