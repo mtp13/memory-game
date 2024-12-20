@@ -4,13 +4,6 @@ let isClickPrevented = null;
 let numberOfTries = 0;
 let showCheat = true;
 
-/**
- * Enables or disables cheat mode for the memory game.
- * When cheat mode is enabled, it listens for keydown events to trigger cheat functionalities.
- * When cheat mode is disabled, it stops listening for keydown events and hides cheat information.
- *
- * @param {boolean} enable - A boolean value indicating whether to enable (true) or disable (false) cheat mode.
- */
 function enableCheatMode(enable) {
   if (!enable) {
     console.log("cheat mode disabled");
@@ -22,20 +15,20 @@ function enableCheatMode(enable) {
 }
 
 function keyDownEventHandler(event) {
-  // console.log(event.code);
   if (event.code === "Backquote") {
     showColorCheat();
   }
 }
 
 function showColorCheat() {
-  let cards = document.querySelectorAll(".card");
-  for (let card of cards) {
+  const $cards = document.querySelectorAll(".card");
+  for (let card of $cards) {
     if (card.dataset.matched === "true" || card.dataset.shown === "true") {
       continue;
     }
     if (showCheat) {
       card.innerHTML = card.dataset.color;
+      card.style.color = "white";
     } else {
       card.innerHTML = "";
     }
@@ -58,13 +51,12 @@ function resetGame() {
     "virginia",
     "elyse",
   ];
-  let cardColors = [...uniqueColors, ...uniqueColors];
-  let cards = document.querySelectorAll(".card");
+  const cardColors = [...uniqueColors, ...uniqueColors];
+  const $cards = document.querySelectorAll(".card");
 
-  for (let card of cards) {
-    let color = cardColors.splice(getRandomNumber(cardColors.length), 1);
+  for (const card of $cards) {
+    const color = cardColors.splice(getRandomNumber(cardColors.length), 1);
     card.dataset.color = color;
-    console.log(color);
     card.dataset.matched = "false";
     card.innerHTML = "";
     card.addEventListener("click", onCardClicked);
@@ -91,9 +83,6 @@ function resetShownCards() {
   isClickPrevented = null;
 }
 
-/**
- * Handles the logic for when a card is clicked in the memory game.
- */
 function onCardClicked() {
   if (
     this === firstCard ||
@@ -121,29 +110,15 @@ function onCardClicked() {
   }
 }
 
-/**
- * Displays the image for the given card.
- *
- * @param {HTMLElement} card - The card element to show.
- */
 function showCard(card) {
   card.innerHTML = `<img src="Assets/${card.dataset.color}.png">`;
   card.dataset.shown = "true";
 }
 
-/**
- * Marks the given cards as matched.
- *
- * @param {HTMLElement} card1 - The first card element.
- * @param {HTMLElement} card2 - The second card element.
- */
 function markCardsAsMatched(card1, card2) {
   card1.dataset.matched = card2.dataset.matched = "true";
 }
 
-/**
- * Resets the displayed cards after a mismatch.
- */
 function resetCards() {
   firstCard.innerHTML = "";
   firstCard.dataset.shown = "false";

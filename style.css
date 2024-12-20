@@ -1,28 +1,28 @@
 .wrapper {
-  margin-right: auto;
-  margin-left: auto;
+  margin: 0 auto;
   max-width: 960px;
   padding-right: 10px;
   padding-left: 10px;
 }
 
 body {
-  background-color: lightblue;
+  background-color: #eee;
   text-align: center;
   color: black;
   padding: 50px;
+  font-family: sans-serif;
 }
 
 #new-game {
   font-size: x-large;
-  border: 2px solid blue;
+  border: 2px solid black;
   border-radius: 5px;
-  color: blue;
+  color: black;
   background-color: white;
 }
 
 #status {
-  color: blue;
+  color: black;
 }
 
 .row {
@@ -32,12 +32,10 @@ body {
 }
 
 .card {
-  background-color: white;
-  height: 120px;
-  width: 100px;
-  border: 2px solid black;
-  border-radius: 5px;
-  box-shadow: 3px 3px;
+  background-color: black;
+  height: 200px;
+  width: 200px;
+  border-radius: 10px;
   margin: 10px;
   display: flex;
   justify-content: center;
@@ -45,8 +43,11 @@ body {
 }
 
 .card img {
-  width: 80px;
-  border: 1px solid black;
+  height: 200px;
+  width: 200px;
+  border-radius: 10px;
+  padding: 5px;
+  object-fit: cover;
 }
 
 .card:hover {
