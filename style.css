@@ -50,14 +50,16 @@ body {
   object-fit: cover;
 }
 
-.card:hover {
-  transition: transform 0.2s;
-  transform: scale(1.1);
-  cursor: pointer;
-}
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transition: transform 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+  }
 
-#new-game:hover {
-  transition: transform 0.2s;
-  transform: scale(1.1);
-  cursor: pointer;
+  #new-game:hover {
+    transition: transform 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+  }
 }
