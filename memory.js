@@ -59,7 +59,7 @@ function resetGame() {
     const color = cardColors.splice(getRandomNumber(cardColors.length), 1);
     card.dataset.color = color;
     card.dataset.matched = "false";
-    card.innerHTML = "";
+    card.innerHTML = card.id;
     card.addEventListener("click", onCardClicked);
   }
   numberOfTries = 0;
@@ -77,8 +77,14 @@ function nextTurn() {
 }
 
 function resetShownCards() {
-  firstCard = null;
-  secondCard = null;
+  if (firstCard) {
+    firstCard.innerHTML = firstCard.id;
+    firstCard = null;
+  }
+  if (firstCard) {
+    secondCard.innerHTML = secondCard.id;
+    secondCard = null;
+  }
   document.getElementById("status").innerHTML =
     "Number of Tries: " + numberOfTries;
   isClickPrevented = null;
