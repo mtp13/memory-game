@@ -31,7 +31,7 @@ function showColorCheat() {
       card.style.color = "#023047";
       card.style.fontWeight = "bold";
     } else {
-      card.innerHTML = "";
+      card.innerHTML = card.id;
     }
   }
   showCheat = !showCheat;
@@ -54,6 +54,7 @@ function resetGame() {
   ];
   const cardColors = [...uniqueColors, ...uniqueColors];
   const $cards = document.querySelectorAll(".card");
+  numberOfTries = 0;
 
   for (const card of $cards) {
     const color = cardColors.splice(getRandomNumber(cardColors.length), 1);
@@ -62,7 +63,6 @@ function resetGame() {
     card.innerHTML = card.id;
     card.addEventListener("click", onCardClicked);
   }
-  numberOfTries = 0;
   resetShownCards();
 }
 
@@ -78,16 +78,24 @@ function nextTurn() {
 
 function resetShownCards() {
   if (firstCard) {
-    firstCard.innerHTML = firstCard.id;
+    if (!isMatched(firstCard)) {
+      firstCard.innerHTML = firstCard.id;
+    }
     firstCard = null;
   }
-  if (firstCard) {
-    secondCard.innerHTML = secondCard.id;
+  if (secondCard) {
+    if (!isMatched(secondCard)) {
+      secondCard.innerHTML = secondCard.id;
+    }
     secondCard = null;
   }
   document.getElementById("status").innerHTML =
     "Number of Tries: " + numberOfTries;
   isClickPrevented = null;
+}
+
+function isMatched(card) {
+  return card.dataset.matched === "true";
 }
 
 function onCardClicked() {

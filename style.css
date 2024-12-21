@@ -1,19 +1,32 @@
+:root {
+  /* CSS HEX */
+  --sky-blue: #8ecae6ff;
+  --blue-green: #219ebcff;
+  --prussian-blue: #023047ff;
+  --selective-yellow: #ffb703ff;
+  --ut-orange: #fb8500ff;
+}
+
 .header {
-  padding: 32px;
+  margin: 0 auto;
+  padding: 5px;
   position: fixed;
   top: 0;
   width: 100%;
   text-align: center;
-  background-color: #023047;
-  color: #fff;
-  border-bottom: 4px solid red;
+  background-color: var(--prussian-blue);
+  color: var(--sky-blue);
+  border-bottom: 5px solid var(--selective-yellow);
   z-index: 1000;
 }
 
+.header h2 {
+  color: var(--selective-yellow);
+}
+
 body {
-  background-color: #ffb703;
+  background-color: var(--blue-green);
   text-align: center;
-  color: #023047;
   font-family: sans-serif;
 }
 
@@ -23,13 +36,14 @@ main {
 }
 
 #new-game {
-  margin: 20px;
-  font-size: x-large;
-  border: 2px solid #023047;
-  border-radius: 5px;
-  color: #023047;
-  background-color: #fb8500;
-  box-shadow: 2px 2px 2px #023047;
+  padding: 5px;
+  margin: 10px;
+  font-size: large;
+  border: 2px solid var(--prussian-blue);
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px var(--prussian-blue);
+  color: var(--prussian-blue);
+  background-color: var(--sky-blue);
 }
 
 .row {
@@ -39,10 +53,10 @@ main {
 }
 
 .card {
-  background-color: #8ecae6;
+  background-color: var(--sky-blue);
   height: 200px;
   width: 200px;
-  border: 2px solid #023047;
+  border: 2px solid var(--prussian-blue);
   border-radius: 10px;
   margin: 10px;
   display: flex;
@@ -60,16 +74,16 @@ main {
 
 .card p {
   font-size: large;
-  color: #023047;
+  color: var(--prussian-blue);
   z-index: 1000;
 }
+
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
     transition: transform 0.2s;
     transform: scale(1.1);
     cursor: pointer;
   }
-
   #new-game:hover {
     transition: transform 0.2s;
     transform: scale(1.1);
