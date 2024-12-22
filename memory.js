@@ -4,6 +4,26 @@ let isClickPrevented = null;
 let numberOfTries = 0;
 let showCheat = true;
 
+const preloadedImages = {};
+
+function preloadImages() {
+  const uniqueColors = [
+    "pops2",
+    "gigi2",
+    "cole2",
+    "walker2",
+    "roman2",
+    "millie2",
+    "virginia2",
+    "elyse2",
+  ];
+
+  for (const color of uniqueColors) {
+    const img = new Image(); // Create a new Image object
+    img.src = `Assets/${color}.jpg`; // Set the image source
+    preloadedImages[color] = img; // Store the image in the preloadedImages object
+  }
+}
 function enableCheatMode(enable) {
   if (!enable) {
     console.log("cheat mode disabled");
@@ -126,8 +146,15 @@ function onCardClicked() {
 }
 
 function showCard(card) {
-  card.innerHTML = `<img src="Assets/${card.dataset.color}.png">`;
-  card.dataset.shown = "true";
+  const color = card.dataset.color;
+  const img = preloadedImages[color]; // Use the preloaded image
+  if (img && img.complete) {
+    card.innerHTML = ""; // Clear any existing content
+    card.appendChild(img.cloneNode()); // Use a clone of the preloaded image
+    card.dataset.shown = "true";
+  } else {
+    console.error(`Image for ${color} is not preloaded or failed to load.`);
+  }
 }
 
 function markCardsAsMatched(card1, card2) {
@@ -143,5 +170,5 @@ function resetCards() {
 }
 
 resetGame();
-
+preloadImages();
 enableCheatMode(true);
