@@ -5,6 +5,8 @@ let numberOfTries = 0;
 let showCheat = true;
 
 const preloadedImages = {};
+const imagesToLoad = 8; // Number of unique colors/images to preload
+let loadedImagesCount = 0;
 
 function preloadImages() {
   const uniqueColors = [
@@ -21,9 +23,24 @@ function preloadImages() {
   for (const color of uniqueColors) {
     const img = new Image(); // Create a new Image object
     img.src = `Assets/${color}.jpg`; // Set the image source
-    preloadedImages[color] = img; // Store the image in the preloadedImages object
+
+    // Increment the counter once the image has loaded
+    img.onload = () => {
+      loadedImagesCount += 1;
+      preloadedImages[color] = img; // Store the image in the preloadedImages object
+      if (loadedImagesCount === imagesToLoad) {
+        console.log("All images preloaded!");
+        resetGame(); // Start the game once all images are preloaded
+      }
+    };
+
+    // If the image fails to load, log an error
+    img.onerror = () => {
+      console.error(`Failed to load image for ${color}`);
+    };
   }
 }
+
 function enableCheatMode(enable) {
   if (!enable) {
     console.log("cheat mode disabled");
@@ -169,6 +186,5 @@ function resetCards() {
   nextTurn();
 }
 
-resetGame();
 preloadImages();
 enableCheatMode(true);

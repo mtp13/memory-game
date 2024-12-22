@@ -1,5 +1,4 @@
 :root {
-  /* CSS HEX */
   --sky-blue: #8ecae6ff;
   --blue-green: #219ebcff;
   --prussian-blue: #023047ff;
@@ -7,11 +6,13 @@
   --ut-orange: #fb8500ff;
 }
 
+html {
+  font-size: 16px;
+}
+
 .header {
   margin: 0 auto;
   padding: 5px;
-  position: fixed;
-  top: 0;
   width: 100%;
   text-align: center;
   background-color: var(--prussian-blue);
@@ -20,7 +21,11 @@
   z-index: 1000;
 }
 
+.header h1 {
+  font-size: 5vw;
+}
 .header h2 {
+  font-size: 4vw;
   color: var(--selective-yellow);
 }
 
@@ -31,7 +36,6 @@ body {
 }
 
 main {
-  margin-top: 150px;
   padding: 20px;
 }
 
@@ -47,26 +51,28 @@ main {
 }
 
 .row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 equal-width columns */
+  grid-template-rows: repeat(4, 1fr); /* 4 equal-height rows */
+  gap: 3vw; /* Optional: space between grid items */
+  justify-items: center;
   justify-content: center;
 }
-
 .card {
   background-color: var(--sky-blue);
   height: 200px;
   width: 200px;
   border: 2px solid var(--prussian-blue);
   border-radius: 10px;
-  margin: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .card img {
-  height: 200px;
-  width: 200px;
+  height: 100%;
+  width: 100%;
   border-radius: 10px;
   padding: 5px;
   object-fit: cover;
@@ -76,6 +82,50 @@ main {
   font-size: large;
   color: var(--prussian-blue);
   z-index: 1000;
+}
+
+/* Grid for smaller screens (4x4 grid for iPads) */
+@media screen and (max-width: 1024px) {
+  .row {
+    grid-template-columns: repeat(4, 1fr); /* 2 columns */
+    grid-template-rows: repeat(4, 1fr); /* 8 rows for 16 items */
+    gap: 2vw;
+  }
+
+  .card {
+    width: 175px;
+    height: 175px;
+  }
+}
+
+/* Grid for smaller screens (2x8 grid for iPhone) */
+@media screen and (max-width: 767px) and (orientation: portrait) {
+  .row {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    grid-template-rows: repeat(8, 1fr); /* 8 rows for 16 items */
+  }
+  .card {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media screen and (max-width: 767px) and (orientation: landscape) {
+  .row {
+    grid-template-columns: repeat(4, 1fr); /* 2 columns */
+    grid-template-rows: repeat(4, 1fr); /* 8 rows for 16 items */
+  }
+  .card {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: repeat(2, 1fr); /* 1 column */
+    grid-template-rows: repeat(8, 1fr); /* 16 rows for 16 items */
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
