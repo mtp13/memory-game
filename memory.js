@@ -2,7 +2,7 @@ let firstCard = null;
 let secondCard = null;
 let isClickPrevented = null;
 let numberOfTries = 0;
-let showCheat = true;
+let showCheat = false;
 
 const preloadedImages = {};
 const imagesToLoad = 8; // Number of unique colors/images to preload
@@ -187,4 +187,4 @@ function resetCards() {
 }
 
 preloadImages();
-enableCheatMode(true);
+enableCheatMode(showCheat);
