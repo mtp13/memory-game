@@ -8,6 +8,15 @@ const preloadedImages = {};
 const imagesToLoad = 8; // Number of unique colors/images to preload
 let loadedImagesCount = 0;
 
+let cards2 = [{ name: "pops", img: ["pops1.jpg", "pops2.jpg"] },
+  {name: "gigi", img: ["gigi1.jpg", "gigi2.jpg"],},
+  {name: "cole", img: ["cole1.jpg", "cole2.jpg"],},
+  {name: "walker", img: ["walker1.jpg", "walker2.jpg"],},
+  {name: "roman", img: ['roman1.jpg', 'roman2.jpg'],},
+  {name: "millie", img: ['millie1.jpg', 'millie2.jpg'],},
+  {name: "virginia", img: ['virginia1.jpg', 'virginia2.jpg'],},
+  {name: "elyse", img: ['elyse1.jpg', 'elyse2.jpg'],},
+];
 function preloadImages() {
   const uniqueColors = [
     "pops2",
