@@ -6,34 +6,41 @@
   --ut-orange: #fb8500ff;
 }
 
-header {
-  width: auto;
-  background-color: var(--prussian-blue);
-  color: var(--sky-blue);
-  border-bottom: 5px solid var(--selective-yellow);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.column {
-  text-align: center;
-}
-
-.flash {
-  color: var(--selective-yellow);
+html {
+  font-size: 16px;
 }
 
 body {
   background-color: var(--blue-green);
   text-align: center;
   font-family: sans-serif;
+  display: flex;
+  justify-content: space-between;
+}
+
+header {
+  background-color: var(--prussian-blue);
+  color: var(--sky-blue);
+  border-bottom: 4px solid var(--selective-yellow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+
+.flash {
+  color: var(--selective-yellow);
+}
+
+#tries {
+  margin-left: 10px;
 }
 
 #new-game-button {
   border: 2px solid var(--selective-yellow);
   background-color: var(--prussian-blue);
   color: var(--sky-blue);
+  margin-right: 10px;
 }
 
 .row {
@@ -42,6 +49,8 @@ body {
   grid-template-rows: repeat(4, 1fr);
   justify-items: center;
   justify-content: center;
+  gap: 10px;
+  margin: 10px;
 }
 .card {
   background-color: var(--sky-blue);
@@ -69,33 +78,10 @@ body {
   z-index: 1000;
 }
 
-/* Grid for smaller screens (4x4 grid for iPads) */
-/* @media screen and (max-width: 1024px) {
-  .row {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 2vw;
-  }
-
-  .card {
-    width: 175px;
-    height: 175px;
-  }
-} */
-
-/* @media screen and (max-width: 767px) and (orientation: landscape) {
-  .row {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-  }
-  .card {
-    width: 150px;
-    height: 150px;
-  }
-}
-  */
-
 @media (max-width: 480px) {
+  body {
+    font-size: 0.8rem;
+  }
   .row {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
@@ -107,6 +93,9 @@ body {
 }
 
 @media (max-width: 932px) and (orientation: landscape) {
+  body {
+    font-size: 0.8rem;
+  }
   .row {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);

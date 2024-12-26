@@ -96,7 +96,6 @@ function startGame() {
   }
 
   const uniqueColors = getRandomKeys(preloadedImages, 8);
-  console.log(Object.keys(preloadedImages));
   const cardColors = [...uniqueColors, ...uniqueColors];
   const $cards = document.querySelectorAll(".card");
   numberOfTries = 0;
