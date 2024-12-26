@@ -7,7 +7,6 @@ let showCheat = true;
 const preloadedImages = {};
 const imagesToLoad = 14;
 let loadedImagesCount = 0;
-const IMAGE_SET = 0;
 let faces = [
   { name: "Pops", img: ["pops1.jpg", "pops2.jpg"] },
   { name: "Gigi", img: ["gigi1.jpg", "gigi2.jpg"] },
@@ -28,7 +27,7 @@ let faces = [
 function preloadImages() {
   for (const face of faces) {
     const img = new Image();
-    img.src = `Assets/${face.img[IMAGE_SET]}`;
+    img.src = `Assets/${face.img[getRandomNumber(face.img.length)]}`;
 
     img.onload = () => {
       loadedImagesCount += 1;
