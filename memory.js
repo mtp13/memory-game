@@ -55,18 +55,18 @@ function enableCheatMode(enable) {
 
 function keyDownEventHandler(event) {
   if (event.code === "Backquote") {
-    showColorCheat();
+    showFaceCheat();
   }
 }
 
-function showColorCheat() {
+function showFaceCheat() {
   const $cards = document.querySelectorAll(".card");
   for (let card of $cards) {
     if (card.dataset.matched === "true" || card.dataset.shown === "true") {
       continue;
     }
     if (showCheat) {
-      card.innerHTML = card.dataset.color.toUpperCase();
+      card.innerHTML = card.dataset.face.toUpperCase();
       card.style.color = "#023047";
       card.style.fontWeight = "bold";
     } else {
@@ -94,14 +94,14 @@ function startGame() {
     return randomKeys;
   }
 
-  const uniqueColors = getRandomKeys(preloadedImages, 8);
-  const cardColors = [...uniqueColors, ...uniqueColors];
+  const uniqueFaces = getRandomKeys(preloadedImages, 8);
+  const cardFaces = [...uniqueFaces, ...uniqueFaces];
   const $cards = document.querySelectorAll(".card");
   numberOfTries = 0;
 
   for (const card of $cards) {
-    const color = cardColors.splice(getRandomNumber(cardColors.length), 1);
-    card.dataset.color = color;
+    const face = cardFaces.splice(getRandomNumber(cardFaces.length), 1);
+    card.dataset.face = face;
     card.dataset.matched = "false";
     card.innerHTML = card.id;
     card.addEventListener("click", onCardClicked);
@@ -112,11 +112,11 @@ function startGame() {
 
 function nextTurn() {
   numberOfTries += 1;
+  updateTries(numberOfTries);
   if (document.querySelectorAll("[data-matched='false']").length > 0) {
-    resetShownCards();
+    setTimeout(resetShownCards(), 750);
   } else {
-    document.getElementById("status").innerHTML =
-      "Good game! Tries: " + numberOfTries;
+    document.getElementById("status").innerHTML = "Good game!";
   }
 }
 
@@ -133,8 +133,7 @@ function resetShownCards() {
     }
     secondCard = null;
   }
-  document.getElementById("tries").innerHTML =
-    "Number of Tries: " + numberOfTries;
+  updateTries(numberOfTries);
   isClickPrevented = null;
 }
 
@@ -158,15 +157,44 @@ function onCardClicked() {
     isClickPrevented = null;
   } else {
     secondCard = this;
-    if (secondCard.dataset.color === firstCard.dataset.color) {
+    if (secondCard.dataset.face === firstCard.dataset.face) {
       markCardsAsMatched(firstCard, secondCard);
       updateStatus("Match Found");
-      setTimeout(nextTurn, 750);
+      nextTurn();
     } else {
       updateStatus("Match Not Found");
       setTimeout(resetCards, 750);
     }
   }
+}
+
+function showCard(card) {
+  const face = card.dataset.face;
+  const img = preloadedImages[face];
+  if (img && img.complete) {
+    card.innerHTML = "";
+    card.appendChild(img.cloneNode()); // Use a clone of the preloaded image
+    card.dataset.shown = "true";
+  } else {
+    console.error(`Image for ${face} is not preloaded or failed to load.`);
+  }
+}
+
+function resetCards() {
+  firstCard.innerHTML = "";
+  firstCard.dataset.shown = "false";
+  secondCard.innerHTML = "";
+  secondCard.dataset.shown = "false";
+  nextTurn();
+}
+
+function markCardsAsMatched(card1, card2) {
+  card1.dataset.matched = card2.dataset.matched = "true";
+}
+
+function updateTries(number) {
+  const $tries = document.getElementById("tries");
+  $tries.innerHTML = `Number of tries: ${number}`;
 }
 
 function updateStatus(message) {
@@ -176,30 +204,6 @@ function updateStatus(message) {
   setTimeout(() => {
     $status.classList.remove("flash");
   }, 1000);
-}
-
-function showCard(card) {
-  const color = card.dataset.color;
-  const img = preloadedImages[color]; // Use the preloaded image
-  if (img && img.complete) {
-    card.innerHTML = ""; // Clear any existing content
-    card.appendChild(img.cloneNode()); // Use a clone of the preloaded image
-    card.dataset.shown = "true";
-  } else {
-    console.error(`Image for ${color} is not preloaded or failed to load.`);
-  }
-}
-
-function markCardsAsMatched(card1, card2) {
-  card1.dataset.matched = card2.dataset.matched = "true";
-}
-
-function resetCards() {
-  firstCard.innerHTML = "";
-  firstCard.dataset.shown = "false";
-  secondCard.innerHTML = "";
-  secondCard.dataset.shown = "false";
-  nextTurn();
 }
 
 preloadImages();
