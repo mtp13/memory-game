@@ -8,7 +8,7 @@ const preloadedImages = {};
 const imagesToLoad = 14;
 let loadedImagesCount = 0;
 const IMAGE_SET = 0;
-let cards = [
+let faces = [
   { name: "Pops", img: ["pops1.jpg", "pops2.jpg"] },
   { name: "Gigi", img: ["gigi1.jpg", "gigi2.jpg"] },
   { name: "Cole", img: ["cole1.jpg", "cole2.jpg"] },
@@ -26,22 +26,20 @@ let cards = [
 ];
 
 function preloadImages() {
-  for (const card of cards) {
+  for (const face of faces) {
     const img = new Image();
-    img.src = `Assets/${card.img[IMAGE_SET]}`;
+    img.src = `Assets/${face.img[IMAGE_SET]}`;
 
     img.onload = () => {
       loadedImagesCount += 1;
-      preloadedImages[card.name] = img;
-      console.log(`loadedImagesCount: ${loadedImagesCount}`);
+      preloadedImages[face.name] = img;
       if (loadedImagesCount === imagesToLoad) {
-        console.log("All images preloaded!");
-        resetGame(); // Start the game once all images are preloaded
+        startGame();
       }
     };
 
     img.onerror = () => {
-      console.error(`Failed to load image for ${card.name}`);
+      console.error(`Failed to load image for ${face.name}`);
     };
   }
 }
@@ -83,7 +81,7 @@ function getRandomNumber(max) {
   return Math.floor(Math.random() * max);
 }
 
-function resetGame() {
+function startGame() {
   function getRandomKeys(obj, numKeys) {
     const keys = Object.keys(obj);
     const randomKeys = [];
@@ -110,6 +108,7 @@ function resetGame() {
     card.innerHTML = card.id;
     card.addEventListener("click", onCardClicked);
   }
+  updateStatus("Good luck!");
   resetShownCards();
 }
 
@@ -136,7 +135,7 @@ function resetShownCards() {
     }
     secondCard = null;
   }
-  document.getElementById("status").innerHTML =
+  document.getElementById("tries").innerHTML =
     "Number of Tries: " + numberOfTries;
   isClickPrevented = null;
 }
@@ -153,23 +152,32 @@ function onCardClicked() {
   ) {
     return;
   }
+
   isClickPrevented = true;
+  showCard(this);
   if (!firstCard) {
     firstCard = this;
-    showCard(firstCard);
     isClickPrevented = null;
   } else {
     secondCard = this;
-    showCard(secondCard);
     if (secondCard.dataset.color === firstCard.dataset.color) {
       markCardsAsMatched(firstCard, secondCard);
-      document.getElementById("status").innerHTML = "Match Found";
-      setTimeout(nextTurn, 1000);
+      updateStatus("Match Found");
+      setTimeout(nextTurn, 750);
     } else {
-      document.getElementById("status").innerHTML = "Match Not Found";
-      setTimeout(resetCards, 1000);
+      updateStatus("Match Not Found");
+      setTimeout(resetCards, 750);
     }
   }
+}
+
+function updateStatus(message) {
+  const $status = document.getElementById("status");
+  $status.innerHTML = message;
+  $status.classList.add("flash");
+  setTimeout(() => {
+    $status.classList.remove("flash");
+  }, 1000);
 }
 
 function showCard(card) {

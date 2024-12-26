@@ -28,11 +28,13 @@
   </head>
   <body>
     <header class="header">
-      <h1>Click Two Squares To Play</h1>
-      <h2 id="status"></h2>
+      <p class="column" id="tries"></p>
+      <p class="column" id="status"></p>
+      <button class="column" id="new-game-button" onclick="startGame()">
+        New Game
+      </button>
     </header>
     <main>
-      <button id="new-game" onclick="resetGame()">New Game</button>
       <div class="row">
         <div class="card" id="1"></div>
         <div class="card" id="2"></div>

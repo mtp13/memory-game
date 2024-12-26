@@ -7,7 +7,7 @@
 }
 
 header {
-  width: 100%;
+  width: auto;
   background-color: var(--prussian-blue);
   color: var(--sky-blue);
   border-bottom: 5px solid var(--selective-yellow);
@@ -17,22 +17,11 @@ header {
 }
 
 .column {
-  flex: 1; /* Each column takes up an equal amount of the available space */
-  text-align: center; /* Center text within each column */
+  text-align: center;
 }
 
 .flash {
-  color: var(--sky-blue); /* Original color */
-  animation: flash 0.75s 1; /* Animation name, duration, and infinite loop */
-}
-
-@keyframes flash {
-  from {
-    color: var(--sky-blue);
-  }
-  to {
-    color: var(--selective-yellow);
-  }
+  color: var(--selective-yellow);
 }
 
 body {
@@ -41,13 +30,10 @@ body {
   font-family: sans-serif;
 }
 
-#new-game {
-  font-size: large;
-  border: 2px solid var(--prussian-blue);
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px var(--prussian-blue);
-  color: var(--prussian-blue);
-  background-color: var(--sky-blue);
+#new-game-button {
+  border: 2px solid var(--selective-yellow);
+  background-color: var(--prussian-blue);
+  color: var(--sky-blue);
 }
 
 .row {
