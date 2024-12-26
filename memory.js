@@ -5,47 +5,43 @@ let numberOfTries = 0;
 let showCheat = true;
 
 const preloadedImages = {};
-const imagesToLoad = 8; // Number of unique colors/images to preload
+const imagesToLoad = 14;
 let loadedImagesCount = 0;
-
-let cards2 = [{ name: "pops", img: ["pops1.jpg", "pops2.jpg"] },
-  {name: "gigi", img: ["gigi1.jpg", "gigi2.jpg"],},
-  {name: "cole", img: ["cole1.jpg", "cole2.jpg"],},
-  {name: "walker", img: ["walker1.jpg", "walker2.jpg"],},
-  {name: "roman", img: ['roman1.jpg', 'roman2.jpg'],},
-  {name: "millie", img: ['millie1.jpg', 'millie2.jpg'],},
-  {name: "virginia", img: ['virginia1.jpg', 'virginia2.jpg'],},
-  {name: "elyse", img: ['elyse1.jpg', 'elyse2.jpg'],},
+const IMAGE_SET = 0;
+let cards = [
+  { name: "Pops", img: ["pops1.jpg", "pops2.jpg"] },
+  { name: "Gigi", img: ["gigi1.jpg", "gigi2.jpg"] },
+  { name: "Cole", img: ["cole1.jpg", "cole2.jpg"] },
+  { name: "Walker", img: ["walker1.jpg", "walker2.jpg"] },
+  { name: "Roman", img: ["roman1.jpg", "roman2.jpg"] },
+  { name: "Millie", img: ["millie1.jpg", "millie2.jpg"] },
+  { name: "Virginia", img: ["virginia1.jpg", "virginia2.jpg"] },
+  { name: "Elyse", img: ["elyse1.jpg", "elyse2.jpg"] },
+  { name: "Kristen", img: ["kristen1.jpg", "kristen2.jpg"] },
+  { name: "Travis", img: ["travis1.jpg", "travis2.jpg"] },
+  { name: "Darby", img: ["darby1.jpg", "darby2.jpg"] },
+  { name: "Ryan", img: ["ryan1.jpg", "ryan2.jpg"] },
+  { name: "Caroline", img: ["caroline1.jpg", "caroline2.jpg"] },
+  { name: "Andrew", img: ["andrew1.jpg", "andrew2.jpg"] },
 ];
+
 function preloadImages() {
-  const uniqueColors = [
-    "pops2",
-    "gigi2",
-    "cole2",
-    "walker2",
-    "roman2",
-    "millie2",
-    "virginia2",
-    "elyse2",
-  ];
+  for (const card of cards) {
+    const img = new Image();
+    img.src = `Assets/${card.img[IMAGE_SET]}`;
 
-  for (const color of uniqueColors) {
-    const img = new Image(); // Create a new Image object
-    img.src = `Assets/${color}.jpg`; // Set the image source
-
-    // Increment the counter once the image has loaded
     img.onload = () => {
       loadedImagesCount += 1;
-      preloadedImages[color] = img; // Store the image in the preloadedImages object
+      preloadedImages[card.name] = img;
+      console.log(`loadedImagesCount: ${loadedImagesCount}`);
       if (loadedImagesCount === imagesToLoad) {
         console.log("All images preloaded!");
         resetGame(); // Start the game once all images are preloaded
       }
     };
 
-    // If the image fails to load, log an error
     img.onerror = () => {
-      console.error(`Failed to load image for ${color}`);
+      console.error(`Failed to load image for ${card.name}`);
     };
   }
 }
@@ -88,16 +84,21 @@ function getRandomNumber(max) {
 }
 
 function resetGame() {
-  const uniqueColors = [
-    "pops2",
-    "gigi2",
-    "cole2",
-    "walker2",
-    "roman2",
-    "millie2",
-    "virginia2",
-    "elyse2",
-  ];
+  function getRandomKeys(obj, numKeys) {
+    const keys = Object.keys(obj);
+    const randomKeys = [];
+    while (randomKeys.length < numKeys) {
+      const randomIndex = getRandomNumber(keys.length);
+      const key = keys[randomIndex];
+      if (!randomKeys.includes(key)) {
+        randomKeys.push(key);
+      }
+    }
+    return randomKeys;
+  }
+
+  const uniqueColors = getRandomKeys(preloadedImages, 8);
+  console.log(Object.keys(preloadedImages));
   const cardColors = [...uniqueColors, ...uniqueColors];
   const $cards = document.querySelectorAll(".card");
   numberOfTries = 0;
