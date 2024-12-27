@@ -64,6 +64,7 @@ header {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  color: var(--prussian-blue);
 }
 
 .card img {
