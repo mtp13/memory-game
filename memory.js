@@ -3,38 +3,38 @@
 import { faces } from "./faces.js";
 
 const TIMEOUT = 750;
-const CHEAT_MODE_STATE = { ENABLED: "enabled", DISABLED: "disabled" };
-const DIFFICULTY_LEVEL = { EASY: 4, MEDIUM: 8, HARD: 14 };
-let numberOfFacePairs = DIFFICULTY_LEVEL.EASY;
-let firstCard = null;
-let secondCard = null;
-let isClickPrevented = false;
-let numberOfTries = 0;
-let areNamesShown = false;
-const preloadedImages = {};
-const IMAGES_TO_LOAD = faces.length;
-console.log(IMAGES_TO_LOAD);
-let $cards = null;
+const CHEAT_MODE = { ENABLED: "enabled", DISABLED: "disabled" };
+const GAME_DIFFICULTY = { EASY: 4, MEDIUM: 8, HARD: 14 };
+let facePairsCount = GAME_DIFFICULTY.EASY;
+let firstSelectedCard = null;
+let secondSelectedCard = null;
+let isCardClickPrevented = false;
+let triesCount = 0;
+let isNameVisibleOnCards = false;
+const preloadedImageCache = {};
+const totalImagesToLoad = faces.length;
+console.log(totalImagesToLoad);
+let cardElements = null;
 
-function preloadImages() {
+function preloadFaceImages() {
   let loadedImagesCount = 0;
   faces.forEach((face) => {
     const img = new Image();
-    img.src = `Assets/${face.img[getRandomNumber(face.img.length)]}`;
+    img.src = `Assets/${face.img[getRandomInteger(face.img.length)]}`;
 
     img.onload = () => {
       loadedImagesCount += 1;
-      preloadedImages[face.name] = img;
+      preloadedImageCache[face.name] = img;
       console.log(face.name, img);
-      if (loadedImagesCount === IMAGES_TO_LOAD) {
-        startNewGame();
+      if (loadedImagesCount === totalImagesToLoad) {
+        initializeGame();
       }
     };
     img.onerror = () => console.error(`Failed to load image for ${face.name}`);
   });
 }
 
-function generateCardGrid(numberOfCards) {
+function createCardGrid(numberOfCards) {
   const $grid = document.getElementById("grid");
   $grid.innerHTML = "";
   for (let i = 1; i <= numberOfCards; i++) {
@@ -45,8 +45,8 @@ function generateCardGrid(numberOfCards) {
   }
 }
 
-function setupCheatMode(state) {
-  if (state === CHEAT_MODE_STATE.DISABLED) {
+function initializeCheatMode(state) {
+  if (state === CHEAT_MODE.DISABLED) {
     document.removeEventListener("keydown", keyDownEventHandler);
     return;
   }
@@ -61,52 +61,52 @@ function setupCheatMode(state) {
     const touchDuration = Date.now() - touchStartTime;
     if (touchDuration > 1000) {
       // Consider it a long press if over 1000ms
-      toggleNamesOnCards();
-      areNamesShown = !areNamesShown;
+      toggleCardNamesVisibility();
+      isNameVisibleOnCards = !isNameVisibleOnCards;
     }
   });
 }
 
 function keyDownEventHandler(event) {
   if (event.code === "Backquote") {
-    toggleNamesOnCards();
-    areNamesShown = !areNamesShown;
+    toggleCardNamesVisibility();
+    isNameVisibleOnCards = !isNameVisibleOnCards;
   }
 }
 
-function toggleNamesOnCards() {
-  for (let card of $cards) {
-    if (isMatched(card) || isShown(card)) {
+function toggleCardNamesVisibility() {
+  for (let card of cardElements) {
+    if (isCardMatched(card) || isCardFaceUp(card)) {
       continue;
     }
-    if (areNamesShown) {
+    if (isNameVisibleOnCards) {
       card.innerText = card.id;
     } else {
-      card.innerText = capitalizeFirstLetter(card.dataset.face);
+      card.innerText = capitalizeFirstCharacter(card.dataset.face);
     }
   }
 }
 
-function getRandomNumber(max) {
+function getRandomInteger(max) {
   return Math.floor(Math.random() * max);
 }
 
-function startNewGame() {
-  firstCard = secondCard = null;
-  numberOfTries = 0;
-  isClickPrevented = false;
-  areNamesShown = false;
-  generateCardGrid(numberOfFacePairs * 2);
-  setupCards();
-  updateStatus("Good luck!");
+function initializeGame() {
+  firstSelectedCard = secondSelectedCard = null;
+  triesCount = 0;
+  isCardClickPrevented = false;
+  isNameVisibleOnCards = false;
+  createCardGrid(facePairsCount * 2);
+  initializeCards();
+  setStatusMessage("Good luck!");
 }
 
-function setupCards() {
+function initializeCards() {
   function getRandomKeys(obj, numKeys) {
     const keys = Object.keys(obj);
     const randomKeys = [];
     while (randomKeys.length < numKeys) {
-      const randomIndex = getRandomNumber(keys.length);
+      const randomIndex = getRandomInteger(keys.length);
       const key = keys[randomIndex];
       if (!randomKeys.includes(key)) {
         randomKeys.push(key);
@@ -114,86 +114,86 @@ function setupCards() {
     }
     return randomKeys;
   }
-  const faces = getRandomKeys(preloadedImages, numberOfFacePairs);
+  const faces = getRandomKeys(preloadedImageCache, facePairsCount);
   const cardFaces = [...faces, ...faces];
 
-  $cards = document.querySelectorAll(".card");
-  $cards.forEach((card) => {
-    const face = cardFaces.splice(getRandomNumber(cardFaces.length), 1);
+  cardElements = document.querySelectorAll(".card");
+  cardElements.forEach((card) => {
+    const face = cardFaces.splice(getRandomInteger(cardFaces.length), 1);
     card.dataset.face = face;
     card.dataset.matched = "false";
     card.dataset.shown = "false";
     card.innerText = card.id;
-    card.addEventListener("click", onCardClicked);
+    card.addEventListener("click", handleCardClick);
   });
 }
 
-function nextTurn() {
-  numberOfTries += 1;
-  updateStatus(`Number of tries: ${numberOfTries}`);
+function advanceToNextTurn() {
+  triesCount += 1;
+  setStatusMessage(`Number of tries: ${triesCount}`);
   if (document.querySelectorAll("[data-matched='false']").length > 0) {
-    setTimeout(resetShownCards, TIMEOUT);
+    setTimeout(hideFaceUpCards, TIMEOUT);
   } else {
     document.getElementById("status").innerText = "Good game!";
   }
 }
 
-function resetShownCards() {
-  [firstCard, secondCard].forEach((card) => {
-    if (card && !isMatched(card)) {
-      flipCard(card);
+function hideFaceUpCards() {
+  [firstSelectedCard, secondSelectedCard].forEach((card) => {
+    if (card && !isCardMatched(card)) {
+      flipCardFace(card);
     }
   });
-  firstCard = null;
-  secondCard = null;
-  isClickPrevented = false;
+  firstSelectedCard = null;
+  secondSelectedCard = null;
+  isCardClickPrevented = false;
 }
 
-function flipCard(card) {
+function flipCardFace(card) {
   if (!card) console.warn("Attempted to reset a null or undefined card.");
-  card.innerText = !areNamesShown
+  card.innerText = !isNameVisibleOnCards
     ? card.id
-    : capitalizeFirstLetter(card.dataset.face);
+    : capitalizeFirstCharacter(card.dataset.face);
   card.dataset.shown = "false";
 }
 
-function isMatched(card) {
+function isCardMatched(card) {
   return card.dataset.matched === "true";
 }
 
-function isShown(card) {
+function isCardFaceUp(card) {
   return card.dataset.shown === "true";
 }
 
-function onCardClicked() {
+function handleCardClick() {
   if (
-    this === firstCard ||
-    isClickPrevented ||
+    this === firstSelectedCard ||
+    isCardClickPrevented ||
     this.dataset.matched === "true"
   ) {
     return;
   }
 
-  isClickPrevented = true;
-  showCard(this);
-  if (!firstCard) {
-    firstCard = this;
-    isClickPrevented = null;
+  isCardClickPrevented = true;
+  revealCardFace(this);
+  if (!firstSelectedCard) {
+    firstSelectedCard = this;
+    isCardClickPrevented = null;
   } else {
-    secondCard = this;
-    if (secondCard.dataset.face === firstCard.dataset.face) {
-      markCardsAsMatched(firstCard, secondCard);
-      setTimeout(nextTurn, TIMEOUT);
+    secondSelectedCard = this;
+    if (secondSelectedCard.dataset.face === firstSelectedCard.dataset.face) {
+      setCardsAsMatched(firstSelectedCard, secondSelectedCard);
+      setTimeout(advanceToNextTurn, TIMEOUT);
     } else {
-      updateStatus("Match Not Found");
-      setTimeout(resetCards, TIMEOUT);
+      setStatusMessage("Match Not Found");
+      setTimeout(hideUnmatchedCards, TIMEOUT);
     }
   }
 }
 
-function showCard(card) {
+function revealCardFace(card) {
   const face = card.dataset.face;
-  const img = preloadedImages[face];
+  const img = preloadedImageCache[face];
   if (img && img.complete) {
     card.innerText = "";
     card.appendChild(img.cloneNode()); // Use a clone of the preloaded image
@@ -203,23 +203,23 @@ function showCard(card) {
   }
 }
 
-function resetCards() {
-  flipCard(firstCard);
-  flipCard(secondCard);
-  nextTurn();
+function hideUnmatchedCards() {
+  flipCardFace(firstSelectedCard);
+  flipCardFace(secondSelectedCard);
+  advanceToNextTurn();
 }
 
-function markCardsAsMatched(card1, card2) {
+function setCardsAsMatched(card1, card2) {
   card1.dataset.matched = card2.dataset.matched = "true";
-  updateStatus("Match Found");
+  setStatusMessage("Match Found");
 }
 
-function updateStatus(message) {
+function setStatusMessage(message) {
   const $status = document.getElementById("status");
   $status.innerText = message;
 }
 
-function capitalizeFirstLetter(word) {
+function capitalizeFirstCharacter(word) {
   if (!word) return ""; // Handle empty or undefined input
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
@@ -248,16 +248,16 @@ function initializeGameModeSelector(formId) {
     // Perform actions based on the selected game mode
     switch (gameMode) {
       case "easy":
-        numberOfFacePairs = DIFFICULTY_LEVEL.EASY;
-        startNewGame();
+        facePairsCount = GAME_DIFFICULTY.EASY;
+        initializeGame();
         break;
       case "medium":
-        numberOfFacePairs = DIFFICULTY_LEVEL.MEDIUM;
-        startNewGame();
+        facePairsCount = GAME_DIFFICULTY.MEDIUM;
+        initializeGame();
         break;
       case "hard":
-        numberOfFacePairs = DIFFICULTY_LEVEL.HARD;
-        startNewGame();
+        facePairsCount = GAME_DIFFICULTY.HARD;
+        initializeGame();
         break;
       default:
         alert("Invalid game mode selected.");
@@ -265,7 +265,7 @@ function initializeGameModeSelector(formId) {
   });
 }
 
-window.startNewGame = startNewGame;
-preloadImages();
+window.startNewGame = initializeGame;
+preloadFaceImages();
 initializeGameModeSelector("gameModeForm");
-setupCheatMode(CHEAT_MODE_STATE.DISABLED);
+initializeCheatMode(CHEAT_MODE.DISABLED);
