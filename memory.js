@@ -2,7 +2,7 @@
 
 import { faces } from "./faces.js";
 
-const TIMEOUT = 500;
+const TIMEOUT = 750;
 const CHEAT_MODE = { ENABLED: "enabled", DISABLED: "disabled" };
 const GAME_DIFFICULTY = { EASY: 4, MEDIUM: 8, HARD: 14 };
 let facePairsCount = GAME_DIFFICULTY.EASY;
