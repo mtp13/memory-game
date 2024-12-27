@@ -13,6 +13,10 @@ let faces = [
   { name: "Ryan", img: ["ryan1.jpg", "ryan2.jpg"] },
   { name: "Caroline", img: ["caroline1.jpg", "caroline2.jpg"] },
   { name: "Andrew", img: ["andrew1.jpg", "andrew2.jpg"] },
+  {
+    name: "Bailey",
+    img: ["bailey1.jpg", "bailey2.jpg", "bailey3.jpg", "bailey4.jpg"],
+  },
 ];
 
 export { faces };
