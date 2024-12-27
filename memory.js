@@ -13,7 +13,6 @@ let triesCount = 0;
 let isNameVisibleOnCards = false;
 const preloadedImageCache = {};
 const totalImagesToLoad = faces.length;
-console.log(totalImagesToLoad);
 let cardElements = null;
 
 function preloadFaceImages() {
@@ -25,7 +24,6 @@ function preloadFaceImages() {
     img.onload = () => {
       loadedImagesCount += 1;
       preloadedImageCache[face.name] = img;
-      console.log(face.name, img);
       if (loadedImagesCount === totalImagesToLoad) {
         initializeGame();
       }
@@ -235,7 +233,6 @@ function initializeGameModeSelector(formId) {
   form.addEventListener("input", (event) => {
     event.preventDefault(); // Prevent the default form submission
 
-    // Get the selected game mode
     const gameMode = form.gameMode.value;
 
     if (!gameMode) {
@@ -243,9 +240,6 @@ function initializeGameModeSelector(formId) {
       return;
     }
 
-    console.log(`Selected Game Mode: ${gameMode}`);
-
-    // Perform actions based on the selected game mode
     switch (gameMode) {
       case "easy":
         facePairsCount = GAME_DIFFICULTY.EASY;
