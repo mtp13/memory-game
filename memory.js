@@ -2,7 +2,7 @@
 
 import { faces } from "./faces.js";
 
-const TIMEOUT = 750;
+const TIMEOUT = 500;
 const CHEAT_MODE = { ENABLED: "enabled", DISABLED: "disabled" };
 const GAME_DIFFICULTY = { EASY: 4, MEDIUM: 8, HARD: 14 };
 let facePairsCount = GAME_DIFFICULTY.EASY;
@@ -25,7 +25,6 @@ function preloadFaceImages() {
     img.onload = () => {
       loadedImagesCount += 1;
       preloadedImageCache[face.name] = img;
-      goo;
       console.log(face.name, img);
       if (loadedImagesCount === totalImagesToLoad) {
         initializeGame();
