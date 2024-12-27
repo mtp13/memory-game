@@ -5,7 +5,7 @@ import { faces } from "./faces.js";
 const TIMEOUT = 750;
 const CHEAT_MODE_STATE = { ENABLED: "enabled", DISABLED: "disabled" };
 const DIFFICULTY_LEVEL = { EASY: 4, MEDIUM: 8, HARD: 14 };
-let numberOfFacePairs = DIFFICULTY_LEVEL.MEDIUM;
+let numberOfFacePairs = DIFFICULTY_LEVEL.EASY;
 let firstCard = null;
 let secondCard = null;
 let isClickPrevented = false;
