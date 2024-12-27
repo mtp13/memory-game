@@ -25,6 +25,7 @@ function preloadFaceImages() {
     img.onload = () => {
       loadedImagesCount += 1;
       preloadedImageCache[face.name] = img;
+      goo;
       console.log(face.name, img);
       if (loadedImagesCount === totalImagesToLoad) {
         initializeGame();
@@ -134,7 +135,7 @@ function advanceToNextTurn() {
   if (document.querySelectorAll("[data-matched='false']").length > 0) {
     setTimeout(hideFaceUpCards, TIMEOUT);
   } else {
-    document.getElementById("status").innerText = "Good game!";
+    setStatusMessage(`Good game. ${triesCount} tries.`);
   }
 }
 
