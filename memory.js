@@ -123,7 +123,7 @@ function initializeCards() {
     const face = cardFaces.splice(getRandomInteger(cardFaces.length), 1);
     card.dataset.face = face;
     card.dataset.matched = "false";
-    card.dataset.shown = "false";
+    card.dataset.faceUp = "false";
     card.innerText = card.id;
     card.addEventListener("click", handleCardClick);
   });
@@ -155,7 +155,7 @@ function flipCardFace(card) {
   card.innerText = !isNameVisibleOnCards
     ? card.id
     : capitalizeFirstCharacter(card.dataset.face);
-  card.dataset.shown = "false";
+  card.dataset.faceUp = "false";
 }
 
 function isCardMatched(card) {
@@ -163,7 +163,7 @@ function isCardMatched(card) {
 }
 
 function isCardFaceUp(card) {
-  return card.dataset.shown === "true";
+  return card.dataset.faceUp === "true";
 }
 
 function handleCardClick() {
@@ -198,7 +198,7 @@ function revealCardFace(card) {
   if (img && img.complete) {
     card.innerText = "";
     card.appendChild(img.cloneNode()); // Use a clone of the preloaded image
-    card.dataset.shown = "true";
+    card.dataset.faceUp = "true";
   } else {
     console.error(`Image for ${face} is not preloaded or failed to load.`);
   }
