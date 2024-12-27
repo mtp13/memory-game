@@ -30,7 +30,7 @@ header {
   height: 50px;
 }
 
-.flash {
+#status {
   color: var(--selective-yellow);
 }
 

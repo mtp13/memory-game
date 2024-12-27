@@ -27,7 +27,6 @@ function preloadImages() {
         startNewGame();
       }
     };
-
     img.onerror = () => console.error(`Failed to load image for ${face.name}`);
   });
 }
@@ -52,9 +51,9 @@ function toggleNamesOnCards() {
       continue;
     }
     if (areNamesShown) {
-      card.innerHTML = card.id;
+      card.innerText = card.id;
     } else {
-      card.innerHTML = card.dataset.face.toUpperCase();
+      card.innerText = card.dataset.face.toUpperCase();
     }
   }
 }
@@ -64,9 +63,11 @@ function getRandomNumber(max) {
 }
 
 function startNewGame() {
+  console.log("new game started");
   firstCard = secondCard = null;
   numberOfTries = 0;
   isClickPrevented = false;
+  areNamesShown = false;
   function getRandomKeys(obj, numKeys) {
     const keys = Object.keys(obj);
     const randomKeys = [];
@@ -86,7 +87,8 @@ function startNewGame() {
     const face = cardFaces.splice(getRandomNumber(cardFaces.length), 1);
     card.dataset.face = face;
     card.dataset.matched = "false";
-    card.innerHTML = card.id;
+    card.dataset.shown = "false";
+    card.innerText = card.id;
     card.addEventListener("click", onCardClicked);
   }
   updateTries(numberOfTries);
@@ -99,28 +101,24 @@ function nextTurn() {
   if (document.querySelectorAll("[data-matched='false']").length > 0) {
     setTimeout(resetShownCards, TIMEOUT);
   } else {
-    document.getElementById("status").innerHTML = "Good game!";
+    document.getElementById("status").innerText = "Good game!";
   }
 }
 
 function resetShownCards() {
-  if (firstCard) {
-    if (!isMatched(firstCard)) {
-      flipCard(firstCard);
+  [firstCard, secondCard].forEach((card) => {
+    if (card && !isMatched(card)) {
+      flipCard(card);
     }
-    firstCard = null;
-  }
-  if (secondCard) {
-    if (!isMatched(secondCard)) {
-      flipCard(secondCard);
-    }
-    secondCard = null;
-  }
-  isClickPrevented = null;
+  });
+  firstCard = null;
+  secondCard = null;
+  isClickPrevented = false;
 }
 
 function flipCard(card) {
-  card.innerHTML = !areNamesShown ? card.id : card.dataset.face.toUpperCase();
+  if (!card) console.warn("Attempted to reset a null or undefined card.");
+  card.innerText = !areNamesShown ? card.id : card.dataset.face.toUpperCase();
   card.dataset.shown = "false";
 }
 
@@ -158,7 +156,7 @@ function showCard(card) {
   const face = card.dataset.face;
   const img = preloadedImages[face];
   if (img && img.complete) {
-    card.innerHTML = "";
+    card.innerText = "";
     card.appendChild(img.cloneNode()); // Use a clone of the preloaded image
     card.dataset.shown = "true";
   } else {
@@ -179,19 +177,17 @@ function markCardsAsMatched(card1, card2) {
 
 function updateTries(number) {
   const $tries = document.getElementById("tries");
-  $tries.innerHTML = `Number of tries: ${number}`;
+  $tries.innerText = `Number of tries: ${number}`;
 }
 
 function updateStatus(message) {
   const $status = document.getElementById("status");
-  $status.innerHTML = message;
-  // TODO: this doesn't work as expected
-  $status.classList.add("flash");
+  $status.innerText = message;
   setTimeout(() => {
-    $status.classList.remove("flash");
-  }, 1000);
+    $status.innerText = "";
+  }, 1500);
 }
 
-window.startGame = startNewGame;
+window.startNewGame = startNewGame;
 preloadImages();
 setupCheatMode(CHEAT_MODE_STATE.ENABLED);
