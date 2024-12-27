@@ -37,6 +37,20 @@ function setupCheatMode(state) {
     return;
   }
   document.addEventListener("keydown", keyDownEventHandler);
+
+  let touchStartTime;
+  document.addEventListener("touchstart", () => {
+    touchStartTime = Date.now();
+  });
+
+  document.addEventListener("touchend", () => {
+    const touchDuration = Date.now() - touchStartTime;
+    if (touchDuration > 1000) {
+      // Consider it a long press if over 1000ms
+      toggleNamesOnCards();
+      areNamesShown = !areNamesShown;
+    }
+  });
 }
 
 function keyDownEventHandler(event) {
@@ -45,9 +59,10 @@ function keyDownEventHandler(event) {
     areNamesShown = !areNamesShown;
   }
 }
+
 function toggleNamesOnCards() {
   for (let card of $cards) {
-    if (card.dataset.matched === "true" || card.dataset.shown === "true") {
+    if (isMatched(card) || isShown(card)) {
       continue;
     }
     if (areNamesShown) {
@@ -63,11 +78,16 @@ function getRandomNumber(max) {
 }
 
 function startNewGame() {
-  console.log("new game started");
   firstCard = secondCard = null;
   numberOfTries = 0;
   isClickPrevented = false;
   areNamesShown = false;
+  setupCards();
+  updateTries(numberOfTries);
+  updateStatus("Ready to play. Good luck!");
+}
+
+function setupCards() {
   function getRandomKeys(obj, numKeys) {
     const keys = Object.keys(obj);
     const randomKeys = [];
@@ -83,16 +103,14 @@ function startNewGame() {
   const faces = getRandomKeys(preloadedImages, NUMBER_OF_FACE_PAIRS);
   const cardFaces = [...faces, ...faces];
 
-  for (const card of $cards) {
+  $cards.forEach((card) => {
     const face = cardFaces.splice(getRandomNumber(cardFaces.length), 1);
     card.dataset.face = face;
     card.dataset.matched = "false";
     card.dataset.shown = "false";
     card.innerText = card.id;
     card.addEventListener("click", onCardClicked);
-  }
-  updateTries(numberOfTries);
-  updateStatus("Ready to play. Good luck!");
+  });
 }
 
 function nextTurn() {
@@ -124,6 +142,10 @@ function flipCard(card) {
 
 function isMatched(card) {
   return card.dataset.matched === "true";
+}
+
+function isShown(card) {
+  return card.dataset.shown === "true";
 }
 
 function onCardClicked() {
