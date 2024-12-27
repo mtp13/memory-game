@@ -43,6 +43,7 @@ function setupCheatMode(state) {
 function keyDownEventHandler(event) {
   if (event.code === "Backquote") {
     toggleNamesOnCards();
+    areNamesShown = !areNamesShown;
   }
 }
 function toggleNamesOnCards() {
@@ -56,7 +57,6 @@ function toggleNamesOnCards() {
       card.innerHTML = card.dataset.face.toUpperCase();
     }
   }
-  areNamesShown = !areNamesShown;
 }
 
 function getRandomNumber(max) {
@@ -90,8 +90,7 @@ function startNewGame() {
     card.addEventListener("click", onCardClicked);
   }
   updateTries(numberOfTries);
-  updateStatus("Good luck!");
-  resetShownCards();
+  updateStatus("Ready to play. Good luck!");
 }
 
 function nextTurn() {
@@ -117,12 +116,12 @@ function resetShownCards() {
     }
     secondCard = null;
   }
-  updateTries(numberOfTries);
   isClickPrevented = null;
 }
 
 function flipCard(card) {
-  card.innerHTML = card.id;
+  card.innerHTML = !areNamesShown ? card.id : card.dataset.face.toUpperCase();
+  card.dataset.shown = "false";
 }
 
 function isMatched(card) {
@@ -147,7 +146,6 @@ function onCardClicked() {
     secondCard = this;
     if (secondCard.dataset.face === firstCard.dataset.face) {
       markCardsAsMatched(firstCard, secondCard);
-      updateStatus("Match Found");
       nextTurn();
     } else {
       updateStatus("Match Not Found");
@@ -169,15 +167,14 @@ function showCard(card) {
 }
 
 function resetCards() {
-  firstCard.innerHTML = "";
-  firstCard.dataset.shown = "false";
-  secondCard.innerHTML = "";
-  secondCard.dataset.shown = "false";
+  flipCard(firstCard);
+  flipCard(secondCard);
   nextTurn();
 }
 
 function markCardsAsMatched(card1, card2) {
   card1.dataset.matched = card2.dataset.matched = "true";
+  updateStatus("Match Found");
 }
 
 function updateTries(number) {
@@ -188,6 +185,7 @@ function updateTries(number) {
 function updateStatus(message) {
   const $status = document.getElementById("status");
   $status.innerHTML = message;
+  // TODO: this doesn't work as expected
   $status.classList.add("flash");
   setTimeout(() => {
     $status.classList.remove("flash");
