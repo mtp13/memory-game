@@ -3,20 +3,19 @@
 import { faces } from "./faces.js";
 
 const TIMEOUT = 750;
-
+const CHEAT_MODE_STATE = { ENABLED: "enabled", DISABLED: "disabled" };
+const NUMBER_OF_FACE_PAIRS = 8;
 let firstCard = null;
 let secondCard = null;
-let isClickPrevented = null;
+let isClickPrevented = false;
 let numberOfTries = 0;
 let areNamesShown = false;
-const CHEAT_MODE_STATE = { ENABLED: "enabled", DISABLED: "disabled" };
-
 const preloadedImages = {};
 const IMAGES_TO_LOAD = 14;
 const $cards = document.querySelectorAll(".card");
-let loadedImagesCount = 0;
 
 function preloadImages() {
+  let loadedImagesCount = 0;
   faces.forEach((face) => {
     const img = new Image();
     img.src = `Assets/${face.img[getRandomNumber(face.img.length)]}`;
@@ -25,7 +24,7 @@ function preloadImages() {
       loadedImagesCount += 1;
       preloadedImages[face.name] = img;
       if (loadedImagesCount === IMAGES_TO_LOAD) {
-        startGame();
+        startNewGame();
       }
     };
 
@@ -34,7 +33,6 @@ function preloadImages() {
 }
 
 function setupCheatMode(state) {
-  console.log(`cheat mode state: ${state}`);
   if (state === CHEAT_MODE_STATE.DISABLED) {
     document.removeEventListener("keydown", keyDownEventHandler);
     return;
@@ -65,7 +63,10 @@ function getRandomNumber(max) {
   return Math.floor(Math.random() * max);
 }
 
-function startGame() {
+function startNewGame() {
+  firstCard = secondCard = null;
+  numberOfTries = 0;
+  isClickPrevented = false;
   function getRandomKeys(obj, numKeys) {
     const keys = Object.keys(obj);
     const randomKeys = [];
@@ -78,10 +79,8 @@ function startGame() {
     }
     return randomKeys;
   }
-
-  const uniqueFaces = getRandomKeys(preloadedImages, 8);
-  const cardFaces = [...uniqueFaces, ...uniqueFaces];
-  numberOfTries = 0;
+  const faces = getRandomKeys(preloadedImages, NUMBER_OF_FACE_PAIRS);
+  const cardFaces = [...faces, ...faces];
 
   for (const card of $cards) {
     const face = cardFaces.splice(getRandomNumber(cardFaces.length), 1);
@@ -90,6 +89,7 @@ function startGame() {
     card.innerHTML = card.id;
     card.addEventListener("click", onCardClicked);
   }
+  updateTries(numberOfTries);
   updateStatus("Good luck!");
   resetShownCards();
 }
@@ -107,18 +107,22 @@ function nextTurn() {
 function resetShownCards() {
   if (firstCard) {
     if (!isMatched(firstCard)) {
-      firstCard.innerHTML = firstCard.id;
+      flipCard(firstCard);
     }
     firstCard = null;
   }
   if (secondCard) {
     if (!isMatched(secondCard)) {
-      secondCard.innerHTML = secondCard.id;
+      flipCard(secondCard);
     }
     secondCard = null;
   }
   updateTries(numberOfTries);
   isClickPrevented = null;
+}
+
+function flipCard(card) {
+  card.innerHTML = card.id;
 }
 
 function isMatched(card) {
@@ -190,6 +194,6 @@ function updateStatus(message) {
   }, 1000);
 }
 
-window.startGame = startGame;
+window.startGame = startNewGame;
 preloadImages();
 setupCheatMode(CHEAT_MODE_STATE.ENABLED);
