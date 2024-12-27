@@ -27,7 +27,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  height: 75px;
 }
 
 #status {
@@ -38,7 +38,8 @@ header {
   margin-left: 10px;
 }
 
-#new-game-button {
+#new-game-button,
+.game-mode-select {
   border: 2px solid var(--selective-yellow);
   background-color: var(--prussian-blue);
   color: var(--sky-blue);

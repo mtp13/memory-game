@@ -4,15 +4,17 @@ import { faces } from "./faces.js";
 
 const TIMEOUT = 750;
 const CHEAT_MODE_STATE = { ENABLED: "enabled", DISABLED: "disabled" };
-const NUMBER_OF_FACE_PAIRS = 8;
+const DIFFICULTY_LEVEL = { EASY: 4, MEDIUM: 8, HARD: 14 };
+let numberOfFacePairs = DIFFICULTY_LEVEL.MEDIUM;
 let firstCard = null;
 let secondCard = null;
 let isClickPrevented = false;
 let numberOfTries = 0;
 let areNamesShown = false;
 const preloadedImages = {};
-const IMAGES_TO_LOAD = 14;
-const $cards = document.querySelectorAll(".card");
+const IMAGES_TO_LOAD = faces.length;
+console.log(IMAGES_TO_LOAD);
+let $cards = null;
 
 function preloadImages() {
   let loadedImagesCount = 0;
@@ -23,12 +25,24 @@ function preloadImages() {
     img.onload = () => {
       loadedImagesCount += 1;
       preloadedImages[face.name] = img;
+      console.log(face.name, img);
       if (loadedImagesCount === IMAGES_TO_LOAD) {
         startNewGame();
       }
     };
     img.onerror = () => console.error(`Failed to load image for ${face.name}`);
   });
+}
+
+function generateCardGrid(numberOfCards) {
+  const $grid = document.getElementById("grid");
+  $grid.innerHTML = "";
+  for (let i = 1; i <= numberOfCards; i++) {
+    let newCard = document.createElement("div");
+    newCard.id = `${i}`;
+    newCard.classList.add("card");
+    $grid.appendChild(newCard);
+  }
 }
 
 function setupCheatMode(state) {
@@ -68,7 +82,7 @@ function toggleNamesOnCards() {
     if (areNamesShown) {
       card.innerText = card.id;
     } else {
-      card.innerText = card.dataset.face.toUpperCase();
+      card.innerText = capitalizeFirstLetter(card.dataset.face);
     }
   }
 }
@@ -82,9 +96,9 @@ function startNewGame() {
   numberOfTries = 0;
   isClickPrevented = false;
   areNamesShown = false;
+  generateCardGrid(numberOfFacePairs * 2);
   setupCards();
-  updateTries(numberOfTries);
-  updateStatus("Ready to play. Good luck!");
+  updateStatus("Good luck!");
 }
 
 function setupCards() {
@@ -100,9 +114,10 @@ function setupCards() {
     }
     return randomKeys;
   }
-  const faces = getRandomKeys(preloadedImages, NUMBER_OF_FACE_PAIRS);
+  const faces = getRandomKeys(preloadedImages, numberOfFacePairs);
   const cardFaces = [...faces, ...faces];
 
+  $cards = document.querySelectorAll(".card");
   $cards.forEach((card) => {
     const face = cardFaces.splice(getRandomNumber(cardFaces.length), 1);
     card.dataset.face = face;
@@ -115,7 +130,7 @@ function setupCards() {
 
 function nextTurn() {
   numberOfTries += 1;
-  updateTries(numberOfTries);
+  updateStatus(`Number of tries: ${numberOfTries}`);
   if (document.querySelectorAll("[data-matched='false']").length > 0) {
     setTimeout(resetShownCards, TIMEOUT);
   } else {
@@ -136,7 +151,9 @@ function resetShownCards() {
 
 function flipCard(card) {
   if (!card) console.warn("Attempted to reset a null or undefined card.");
-  card.innerText = !areNamesShown ? card.id : card.dataset.face.toUpperCase();
+  card.innerText = !areNamesShown
+    ? card.id
+    : capitalizeFirstLetter(card.dataset.face);
   card.dataset.shown = "false";
 }
 
@@ -166,7 +183,7 @@ function onCardClicked() {
     secondCard = this;
     if (secondCard.dataset.face === firstCard.dataset.face) {
       markCardsAsMatched(firstCard, secondCard);
-      nextTurn();
+      setTimeout(nextTurn, TIMEOUT);
     } else {
       updateStatus("Match Not Found");
       setTimeout(resetCards, TIMEOUT);
@@ -197,19 +214,58 @@ function markCardsAsMatched(card1, card2) {
   updateStatus("Match Found");
 }
 
-function updateTries(number) {
-  const $tries = document.getElementById("tries");
-  $tries.innerText = `Number of tries: ${number}`;
-}
-
 function updateStatus(message) {
   const $status = document.getElementById("status");
   $status.innerText = message;
-  setTimeout(() => {
-    $status.innerText = "";
-  }, 1500);
+}
+
+function capitalizeFirstLetter(word) {
+  if (!word) return ""; // Handle empty or undefined input
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+function initializeGameModeSelector(formId) {
+  const form = document.getElementById(formId);
+
+  if (!form) {
+    console.error(`Form with ID "${formId}" not found.`);
+    return;
+  }
+
+  form.addEventListener("input", (event) => {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the selected game mode
+    const gameMode = form.gameMode.value;
+
+    if (!gameMode) {
+      alert("Please select a game mode.");
+      return;
+    }
+
+    console.log(`Selected Game Mode: ${gameMode}`);
+
+    // Perform actions based on the selected game mode
+    switch (gameMode) {
+      case "easy":
+        numberOfFacePairs = DIFFICULTY_LEVEL.EASY;
+        startNewGame();
+        break;
+      case "medium":
+        numberOfFacePairs = DIFFICULTY_LEVEL.MEDIUM;
+        startNewGame();
+        break;
+      case "hard":
+        numberOfFacePairs = DIFFICULTY_LEVEL.HARD;
+        startNewGame();
+        break;
+      default:
+        alert("Invalid game mode selected.");
+    }
+  });
 }
 
 window.startNewGame = startNewGame;
 preloadImages();
+initializeGameModeSelector("gameModeForm");
 setupCheatMode(CHEAT_MODE_STATE.ENABLED);
