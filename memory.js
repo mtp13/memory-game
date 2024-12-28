@@ -181,7 +181,7 @@ function handleCardClick() {
     secondSelectedCard = this;
     if (secondSelectedCard.dataset.face === firstSelectedCard.dataset.face) {
       setCardsAsMatched(firstSelectedCard, secondSelectedCard);
-      setTimeout(advanceToNextTurn, TIMEOUT);
+      advanceToNextTurn();
     } else {
       setStatusMessage("Match Not Found");
       setTimeout(hideUnmatchedCards, TIMEOUT);
