@@ -262,4 +262,4 @@ function initializeGameModeSelector(formId) {
 window.startNewGame = initializeGame;
 preloadFaceImages();
 initializeGameModeSelector("gameModeForm");
-initializeCheatMode(CHEAT_MODE.DISABLED);
+initializeCheatMode(CHEAT_MODE.ENABLED);
