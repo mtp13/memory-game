@@ -5,7 +5,7 @@ import { faces } from "./faces.js";
 const TIMEOUT = 750;
 const CHEAT_MODE = { ENABLED: "enabled", DISABLED: "disabled" };
 const GAME_DIFFICULTY = { EASY: 4, MEDIUM: 8, HARD: 14 };
-let facePairsCount = GAME_DIFFICULTY.EASY;
+let facePairsCount = GAME_DIFFICULTY.MEDIUM;
 let firstSelectedCard = null;
 let secondSelectedCard = null;
 let isCardClickPrevented = false;
@@ -78,9 +78,11 @@ function toggleCardNamesVisibility() {
       continue;
     }
     if (isNameVisibleOnCards) {
+      flipCardFace(card);
       card.innerText = card.id;
     } else {
       card.innerText = capitalizeFirstCharacter(card.dataset.face);
+      revealCardFace(card);
     }
   }
 }
@@ -259,7 +261,7 @@ function initializeGameModeSelector(formId) {
   });
 }
 
-window.startNewGame = initializeGame;
+window.startNewGame = preloadFaceImages;
 preloadFaceImages();
 initializeGameModeSelector("gameModeForm");
 initializeCheatMode(CHEAT_MODE.ENABLED);
