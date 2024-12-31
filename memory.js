@@ -240,7 +240,6 @@ function initializeGameModeSelector(formId) {
       return;
     }
 
-    console.log(gameMode);
     switch (gameMode) {
       case "easy":
         facePairsCount = GAME_DIFFICULTY.EASY;
