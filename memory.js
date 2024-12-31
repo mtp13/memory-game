@@ -78,11 +78,9 @@ function toggleCardNamesVisibility() {
       continue;
     }
     if (isNameVisibleOnCards) {
-      flipCardFace(card);
       card.innerText = card.id;
     } else {
       card.innerText = capitalizeFirstCharacter(card.dataset.face);
-      revealCardFace(card);
     }
   }
 }
@@ -264,4 +262,4 @@ function initializeGameModeSelector(formId) {
 window.startNewGame = preloadFaceImages;
 preloadFaceImages();
 initializeGameModeSelector("gameModeForm");
-initializeCheatMode(CHEAT_MODE.ENABLED);
+initializeCheatMode(CHEAT_MODE.DISABLED);
