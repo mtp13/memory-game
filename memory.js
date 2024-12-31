@@ -5,7 +5,7 @@ import { faces } from "./faces.js";
 const TIMEOUT = 750;
 const CHEAT_MODE = { ENABLED: "enabled", DISABLED: "disabled" };
 const GAME_DIFFICULTY = { EASY: 4, MEDIUM: 8, HARD: 14 };
-let facePairsCount = GAME_DIFFICULTY.EASY;
+let facePairsCount = GAME_DIFFICULTY.MEDIUM;
 let firstSelectedCard = null;
 let secondSelectedCard = null;
 let isCardClickPrevented = false;
@@ -240,6 +240,7 @@ function initializeGameModeSelector(formId) {
       return;
     }
 
+    console.log(gameMode);
     switch (gameMode) {
       case "easy":
         facePairsCount = GAME_DIFFICULTY.EASY;
