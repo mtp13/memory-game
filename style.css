@@ -40,11 +40,11 @@ header {
 
 .right {
   flex: 1;
+  text-align: center;
 }
 
 .column {
   text-align: center;
-  flex: 1;
 }
 
 #status {
@@ -64,8 +64,6 @@ header {
   color: var(--sky-blue);
 }
 
-label {
-}
 .row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -75,6 +73,7 @@ label {
   gap: 10px;
   margin: 10px;
 }
+
 .card {
   background-color: var(--sky-blue);
   height: 200px;
