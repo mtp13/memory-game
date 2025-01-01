@@ -29,6 +29,7 @@
   <body>
     <header class="header">
       <form id="gameModeForm" class="column">
+        <div class="left">
         <label for="gameMode"></label>
         <select class="game-mode-select" id="gameMode" name="gameMode" required>
           <option value="easy">Easy</option>
@@ -36,10 +37,15 @@
           <option value="hard">Hard</option>
         </select>
       </form>
-      <p class="column center" id="status"></p>
+      </div>
+      <div class="center">
+      <p class="column" id="status"></p>
+      </div>
+      <div class="right">
       <button class="column" id="new-game-button" onclick="startNewGame()">
         New Game
       </button>
+      </div>
     </header>
     <main>
       <div class="row" id="grid"></div>
