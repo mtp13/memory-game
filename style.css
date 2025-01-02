@@ -62,6 +62,7 @@ header {
   border-radius: 0;
   background-color: var(--prussian-blue);
   color: var(--sky-blue);
+  padding: 3px;
 }
 
 .row {
