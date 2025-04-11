@@ -20,7 +20,6 @@ function preloadFaceImages() {
   faces.forEach((face) => {
     const img = new Image();
     img.src = `Assets/${face.img[getRandomInteger(face.img.length)]}`;
-
     img.onload = () => {
       loadedImagesCount += 1;
       preloadedImageCache[face.name] = img;
@@ -51,12 +50,10 @@ function initializeCheatMode(state) {
     return;
   }
   document.addEventListener('keydown', keyDownEventHandler);
-
   let touchStartTime;
   document.addEventListener('touchstart', () => {
     touchStartTime = Date.now();
   });
-
   document.addEventListener('touchend', () => {
     const touchDuration = Date.now() - touchStartTime;
     if (touchDuration > 1000) {
@@ -116,7 +113,6 @@ function initializeCards() {
   }
   const faces = getRandomKeys(preloadedImageCache, facePairsCount);
   const cardFaces = [...faces, ...faces];
-
   cardElements = document.querySelectorAll('.card');
   cardElements.forEach((card) => {
     const face = cardFaces.splice(getRandomInteger(cardFaces.length), 1);
@@ -174,7 +170,6 @@ function handleCardClick() {
   ) {
     return;
   }
-
   isCardClickPrevented = true;
   revealCardFace(this);
   if (!firstSelectedCard) {
@@ -227,22 +222,17 @@ function capitalizeFirstCharacter(word) {
 
 function initializeGameModeSelector(formId) {
   const form = document.getElementById(formId);
-
   if (!form) {
     console.error(`Form with ID "${formId}" not found.`);
     return;
   }
-
   form.addEventListener('input', (event) => {
     event.preventDefault(); // Prevent the default form submission
-
     const gameMode = form.gameMode.value;
-
     if (!gameMode) {
       alert('Please select a game mode.');
       return;
     }
-
     switch (gameMode) {
       case 'easy':
         facePairsCount = GAME_DIFFICULTY.EASY;
