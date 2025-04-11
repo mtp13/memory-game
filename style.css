@@ -51,15 +51,11 @@ header {
   color: var(--selective-yellow);
 }
 
-#new-game-button {
-  border: 2px solid var(--selective-yellow);
-  background-color: var(--prussian-blue);
-  color: var(--sky-blue);
-}
-
+#new-game-button,
 .game-mode-select {
+  line-height: 1.5;
   border: 2px solid var(--selective-yellow);
-  border-radius: 0;
+  border-radius: 5px;
   background-color: var(--prussian-blue);
   color: var(--sky-blue);
   padding: 3px;
@@ -117,7 +113,7 @@ header {
 }
 @media (max-width: 480px) {
   body {
-    font-size: 0.8rem;
+    font-size: 1.2rem;
   }
   .row {
     grid-template-columns: repeat(4, 1fr);
@@ -131,7 +127,7 @@ header {
 
 @media (max-width: 932px) and (orientation: landscape) {
   body {
-    font-size: 0.8rem;
+    font-size: 1.2rem;
   }
   .row {
     grid-template-columns: repeat(4, 1fr);
