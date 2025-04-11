@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import { faces } from "./faces.js";
+import { faces } from './faces.js';
 
 const TIMEOUT = 750;
-const CHEAT_MODE = { ENABLED: "enabled", DISABLED: "disabled" };
+const CHEAT_MODE = { ENABLED: 'enabled', DISABLED: 'disabled' };
 const GAME_DIFFICULTY = { EASY: 4, MEDIUM: 8, HARD: 14 };
 let facePairsCount = GAME_DIFFICULTY.MEDIUM;
 let firstSelectedCard = null;
@@ -33,29 +33,31 @@ function preloadFaceImages() {
 }
 
 function createCardGrid(numberOfCards) {
-  const $grid = document.getElementById("grid");
-  $grid.innerHTML = "";
+  const $grid = document.getElementById('grid');
+  $grid.innerHTML = '';
   for (let i = 1; i <= numberOfCards; i++) {
-    let newCard = document.createElement("div");
-    newCard.id = `${i}`;
-    newCard.classList.add("card");
+    let newCard = document.createElement('div');
+    // newCard.id = `${i}`;
+    // remove the id text (Millie asked why I needed it!)
+    newCard.id = '';
+    newCard.classList.add('card');
     $grid.appendChild(newCard);
   }
 }
 
 function initializeCheatMode(state) {
   if (state === CHEAT_MODE.DISABLED) {
-    document.removeEventListener("keydown", keyDownEventHandler);
+    document.removeEventListener('keydown', keyDownEventHandler);
     return;
   }
-  document.addEventListener("keydown", keyDownEventHandler);
+  document.addEventListener('keydown', keyDownEventHandler);
 
   let touchStartTime;
-  document.addEventListener("touchstart", () => {
+  document.addEventListener('touchstart', () => {
     touchStartTime = Date.now();
   });
 
-  document.addEventListener("touchend", () => {
+  document.addEventListener('touchend', () => {
     const touchDuration = Date.now() - touchStartTime;
     if (touchDuration > 1000) {
       // Consider it a long press if over 1000ms
@@ -66,7 +68,7 @@ function initializeCheatMode(state) {
 }
 
 function keyDownEventHandler(event) {
-  if (event.code === "Backquote") {
+  if (event.code === 'Backquote') {
     toggleCardNamesVisibility();
     isNameVisibleOnCards = !isNameVisibleOnCards;
   }
@@ -96,7 +98,7 @@ function initializeGame() {
   isNameVisibleOnCards = false;
   createCardGrid(facePairsCount * 2);
   initializeCards();
-  setStatusMessage("Good luck!");
+  setStatusMessage('Good luck!');
 }
 
 function initializeCards() {
@@ -115,14 +117,15 @@ function initializeCards() {
   const faces = getRandomKeys(preloadedImageCache, facePairsCount);
   const cardFaces = [...faces, ...faces];
 
-  cardElements = document.querySelectorAll(".card");
+  cardElements = document.querySelectorAll('.card');
   cardElements.forEach((card) => {
     const face = cardFaces.splice(getRandomInteger(cardFaces.length), 1);
     card.dataset.face = face;
-    card.dataset.matched = "false";
-    card.dataset.faceUp = "false";
+    card.dataset.matched = 'false';
+    card.dataset.faceUp = 'false';
     card.innerText = card.id;
-    card.addEventListener("click", handleCardClick);
+    card.addEventListener('click', handleCardClick);
+    card.addEventListener('touchstart', handleCardClick, { passive: true });
   });
 }
 
@@ -148,26 +151,26 @@ function hideFaceUpCards() {
 }
 
 function flipCardFace(card) {
-  if (!card) console.warn("Attempted to reset a null or undefined card.");
+  if (!card) console.warn('Attempted to reset a null or undefined card.');
   card.innerText = !isNameVisibleOnCards
     ? card.id
     : capitalizeFirstCharacter(card.dataset.face);
-  card.dataset.faceUp = "false";
+  card.dataset.faceUp = 'false';
 }
 
 function isCardMatched(card) {
-  return card.dataset.matched === "true";
+  return card.dataset.matched === 'true';
 }
 
 function isCardFaceUp(card) {
-  return card.dataset.faceUp === "true";
+  return card.dataset.faceUp === 'true';
 }
 
 function handleCardClick() {
   if (
     this === firstSelectedCard ||
     isCardClickPrevented ||
-    this.dataset.matched === "true"
+    this.dataset.matched === 'true'
   ) {
     return;
   }
@@ -183,7 +186,7 @@ function handleCardClick() {
       setCardsAsMatched(firstSelectedCard, secondSelectedCard);
       advanceToNextTurn();
     } else {
-      setStatusMessage("Match Not Found");
+      setStatusMessage('Match Not Found');
       setTimeout(hideUnmatchedCards, TIMEOUT);
     }
   }
@@ -193,9 +196,9 @@ function revealCardFace(card) {
   const face = card.dataset.face;
   const img = preloadedImageCache[face];
   if (img && img.complete) {
-    card.innerText = "";
+    card.innerText = '';
     card.appendChild(img.cloneNode()); // Use a clone of the preloaded image
-    card.dataset.faceUp = "true";
+    card.dataset.faceUp = 'true';
   } else {
     console.error(`Image for ${face} is not preloaded or failed to load.`);
   }
@@ -208,17 +211,17 @@ function hideUnmatchedCards() {
 }
 
 function setCardsAsMatched(card1, card2) {
-  card1.dataset.matched = card2.dataset.matched = "true";
-  setStatusMessage("Match Found");
+  card1.dataset.matched = card2.dataset.matched = 'true';
+  setStatusMessage('Match Found');
 }
 
 function setStatusMessage(message) {
-  const $status = document.getElementById("status");
+  const $status = document.getElementById('status');
   $status.innerText = message;
 }
 
 function capitalizeFirstCharacter(word) {
-  if (!word) return ""; // Handle empty or undefined input
+  if (!word) return ''; // Handle empty or undefined input
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
@@ -230,36 +233,36 @@ function initializeGameModeSelector(formId) {
     return;
   }
 
-  form.addEventListener("input", (event) => {
+  form.addEventListener('input', (event) => {
     event.preventDefault(); // Prevent the default form submission
 
     const gameMode = form.gameMode.value;
 
     if (!gameMode) {
-      alert("Please select a game mode.");
+      alert('Please select a game mode.');
       return;
     }
 
     switch (gameMode) {
-      case "easy":
+      case 'easy':
         facePairsCount = GAME_DIFFICULTY.EASY;
         initializeGame();
         break;
-      case "medium":
+      case 'medium':
         facePairsCount = GAME_DIFFICULTY.MEDIUM;
         initializeGame();
         break;
-      case "hard":
+      case 'hard':
         facePairsCount = GAME_DIFFICULTY.HARD;
         initializeGame();
         break;
       default:
-        alert("Invalid game mode selected.");
+        alert('Invalid game mode selected.');
     }
   });
 }
 
 window.startNewGame = preloadFaceImages;
 preloadFaceImages();
-initializeGameModeSelector("gameModeForm");
+initializeGameModeSelector('gameModeForm');
 initializeCheatMode(CHEAT_MODE.DISABLED);
